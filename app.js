@@ -45,6 +45,6 @@ mongoose.connect(process.env.DB_CONNECTION_STRING,
     console.log("Connected to the database")
 })
 
-app.listen(3003,() => {
+app.listen(process.env.Port || 3003,() => {
     console.log("listening to 3000")
 });

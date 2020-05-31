@@ -4,6 +4,7 @@ require("dotenv/config")
 
 const app = express()
 const Creature = require("./model/user")
+var PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 
@@ -45,6 +46,6 @@ mongoose.connect(process.env.DB_CONNECTION_STRING,
     console.log("Connected to the database")
 })
 
-app.listen(process.env.Port || 3003,() => {
+app.listen(PORT,() => {
     console.log("listening to 3000")
 });

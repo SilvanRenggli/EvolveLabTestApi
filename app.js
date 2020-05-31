@@ -22,7 +22,8 @@ app.post("/create_creature", async (req, res) => {
 
 app.get("/load_creature", async (req, res) => {
     // Get the count of all users
-    console.log(req.body)
+    console.log(req.body);
+    console.log(process.env.DB_CONNECTION_STRING);
     var depth = req.body["depth"];
     console.log(depth)
     Creature.find({depth: depth}).countDocuments().exec(function (err, count) {

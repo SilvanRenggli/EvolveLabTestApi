@@ -20,6 +20,11 @@ app.post("/create_creature", async (req, res) => {
     }
 });
 
+
+app.get("/", (req, res) => {
+    console.log("hello")
+});
+
 app.get("/load_creature", async (req, res) => {
     // Get the count of all users
     console.log(req.body);

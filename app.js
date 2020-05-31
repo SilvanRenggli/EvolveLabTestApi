@@ -21,22 +21,14 @@ app.post("/create_creature", async (req, res) => {
 });
 
 
-app.get("/", (req, res) => {
-    console.log("hello")
-});
-
 app.get("/load_creature", async (req, res) => {
-    // Get the count of all users
-    console.log(req.body);
-    console.log(process.env.DB_CONNECTION_STRING);
+
     var depth = req.body["depth"];
-    console.log(depth)
     Creature.find({depth: depth}).countDocuments().exec(function (err, count) {
 
     // Get a random entry
     var random = Math.floor(Math.random() * count)
   
-    // Again query all users but only fetch one offset by our random #
     Creature.findOne({depth: depth}).skip(random)
     .exec()
     .then(doc => {

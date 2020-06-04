@@ -27,20 +27,21 @@ app.post("/update_enemy", async (req, res) => {
         var winrate = enemy["winrate"];
         var kills = enemy["kills"];
         var depth = enemy["depth"];
+        console.log("kills:" + kills)
         if (req.body["won"]){
             winrate += 1;
-            await Creature.update({"_id" : id},{$set: {"kills": kills + 1}})
+            await Creature.update({"_id" : id},{$set: {"kills": (kills + 1)}})
             if(winrate > 2){
                 await Creature.update(
                     {"_id" : id}, 
-                    {$set: {"depth" : depth + 1, "winrate": 0 }});
+                    {$set: {"depth" : (depth + 1), "winrate": 0 }});
             }
         }else{
             winrate -= 1;
             if(winrate < -2){
                 await Creature.update(
                     {"_id" : id}, 
-                    {$set: {"depth" : max(depth -1, 0), "winrate": 0 }});
+                    {$set: {"depth" : max((depth - 1), 0), "winrate": 0 }});
             }
         }
         res.send(enemy)

@@ -23,7 +23,7 @@ app.post("/update_enemy", async (req, res) => {
     console.log("called_update_enemy")
     try{
         const id = req.body["id"];
-        const enemy = (await Creature.findById(id)).toJSON;
+        const enemy = Creature.findById(id))
         console.log("ENEMY: " + enemy)
         var winrate = enemy["winrate"];
         var kills = enemy["kills"];

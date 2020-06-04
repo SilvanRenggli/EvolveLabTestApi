@@ -43,6 +43,7 @@ app.post("/update_enemy", async (req, res) => {
                     {$set: {"depth" : max(depth -1, 0), "winrate": 0 }});
             }
         }
+        res.send(enemy)
     } catch(err){
         res.send({message: err})
         console.log(err)

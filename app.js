@@ -24,6 +24,7 @@ app.post("/update_enemy", async (req, res) => {
     try{
         const id = req.body["id"];
         const enemy = Creature.findById(id);
+        console.log("ENEMY: " + enemy)
         var winrate = enemy["winrate"];
         var kills = enemy["kills"];
         var depth = enemy["depth"];

@@ -25,10 +25,10 @@ app.post("/update_enemy", async (req, res) => {
         const id = req.body["id"];
         const enemy = Creature.findById(id);
         console.log("ENEMY: " + enemy);
-        var winrate = enemy["winrate"];
-        var kills = enemy["kills"];
-        var depth = enemy["depth"];
-        console.log("kills:" + kills)
+        var winrate = 0;
+        var kills = 3;
+        var depth = 1;
+        console.log("kills:" + kills);
         if (req.body["won"]){
             winrate += 1;
             await Creature.update({"_id" : id},{$set: {"kills": (kills + 1)}})

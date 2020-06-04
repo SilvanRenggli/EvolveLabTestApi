@@ -33,6 +33,10 @@ app.post("/update_enemy", async (req, res) => {
                     {"_id" : id}, 
                     {$inc: {"depth" : 1}},
                     {$set: {"winratio" : 0 }});
+            }else{
+                await Creature.update(
+                    {"_id" : id}, 
+                    {$inc: {"winratio" : 1 }});
             }
         }else{
             winratio -= 1;
@@ -41,6 +45,10 @@ app.post("/update_enemy", async (req, res) => {
                     {"_id" : id}, 
                     {$inc: {"depth" : -1}},
                     {$set: {"winratio" : 0}});
+            }else{
+                await Creature.update(
+                    {"_id" : id}, 
+                    {$inc: {"winratio" : -1 }});
             }
         }
         res.send("hello")

@@ -8,9 +8,13 @@ const Creature = new mongoose.Schema({
     nr_of_states: Number,
     speed: Number,
     strength: Number,
+    power: Number,
     transition_time: Number,
     depth: Number,
-    owner: String
+    original_depth: Number,
+    owner: String,
+    kills: Number,
+    winratio: Number 
 })
 
 module.exports = mongoose.model("creatures", Creature);

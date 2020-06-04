@@ -24,8 +24,6 @@ app.post("/update_enemy", async (req, res) => {
     try{
         const id = req.body["id"];
         const enemy = Creature.findById(id);
-        console.log("ENEMY: " + enemy);
-        console.log("kills:" + kills);
         if (req.body["won"]){
             winrate += 1;
             await Creature.update({"_id" : id},{$inc: {"kills": 1}})
@@ -44,7 +42,7 @@ app.post("/update_enemy", async (req, res) => {
                     {$set: {"winrate" : 0}});
             }
         }
-        res.send(enemy)
+        res.send("hello")
     } catch(err){
         res.send({message: err})
         console.log(err)

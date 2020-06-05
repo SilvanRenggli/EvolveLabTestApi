@@ -3,7 +3,7 @@ const mongoose = require("mongoose")
 require("dotenv/config")
 
 const app = express()
-const Creature = require("./model/user")
+const Creature = require("./model/creatures")
 const User = require("./model/user")
 var PORT = process.env.PORT || 5000;
 

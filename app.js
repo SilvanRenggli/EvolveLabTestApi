@@ -34,7 +34,7 @@ app.post("/create_user", async (req, res) => {
 app.post("/calc_user_score", async (req, res) => {
     try{
         Creature.aggregate([
-            {$match: {owner: req.body[name]}},
+            {$match: {owner: req.body["name"]}},
             {$group: {_id: "$name", max_depth: {$max: "depth"}}},
             {$sort: {total: -1}} ])
         .exec()

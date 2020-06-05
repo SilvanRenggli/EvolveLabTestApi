@@ -38,7 +38,7 @@ app.post("/calc_user_score", async (req, res) => {
                 _id : "$owner",
                 deepest : {$max : "$depth"},
                 kills: {$sum : "kills"},
-                score: {$sum : {$multiply :["$kills", "$depth"]}}
+                score: {$sum : {$multiply :["$kills", "$depth" + 1]}}
         }}
         ])
         .exec()

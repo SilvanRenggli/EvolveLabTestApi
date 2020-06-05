@@ -31,7 +31,7 @@ app.post("/create_user", async (req, res) => {
     }
 });
 
-app.post("/calc_user_score", async (req, res) => {
+app.get("/calc_user_score", async (req, res) => {
     try{
         Creature.aggregate([
             {$group: {

@@ -4,6 +4,7 @@ require("dotenv/config")
 
 const app = express()
 const Creature = require("./model/user")
+const User = require("./model/user")
 var PORT = process.env.PORT || 5000;
 
 app.use(express.json());
@@ -13,6 +14,17 @@ app.post("/create_creature", async (req, res) => {
         const creature = new Creature(req.body);
         await creature.save();
         res.send(creature)
+    } catch(err){
+        res.send({message: err})
+        console.log(err)
+    }
+});
+
+app.post("/create_user", async (req, res) => {
+    try{
+        const user = new User(req.body);
+        await user.save();
+        res.send(user)
     } catch(err){
         res.send({message: err})
         console.log(err)

@@ -18,8 +18,8 @@ const Creature = new mongoose.Schema({
 })
 
 const Users = new mongoose.Schema({
-    Name: String,
-    Score: Number
+    name: String,
+    score: Number
 }) 
 
 module.exports = mongoose.model("creatures", Creature);

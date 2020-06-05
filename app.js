@@ -36,7 +36,9 @@ app.post("/calc_user_score", async (req, res) => {
         Creature.aggregate([
             {$group: {
                 _id : "$owner",
-                deepest : {$max : "$depth"}
+                deepest : {$max : "$depth"},
+                kills: {$sum : "kills"},
+                score: {$multiply: ["$depth", "$kills" + 1]}
         }}
         ])
         .exec()

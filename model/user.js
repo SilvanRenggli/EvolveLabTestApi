@@ -17,4 +17,10 @@ const Creature = new mongoose.Schema({
     winratio: Number 
 })
 
+const Users = new mongoose.Schema({
+    Name: String,
+    Score: Number
+}) 
+
 module.exports = mongoose.model("creatures", Creature);
+module.exports = mongoose.model("users", Users);

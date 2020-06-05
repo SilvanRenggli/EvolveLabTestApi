@@ -36,10 +36,10 @@ app.get("/calc_user_score", async (req, res) => {
         Creature.aggregate([
             {$group: {
                 _id : "$owner",
-                score: {$sum : {$multiply :["$depth", {$add: ["$kills", {"$literal" : 1}]}]}}},
+                score: {$sum : {$multiply :["$depth", {$add: ["$kills", {"$literal" : 1}]}]}},
                 deepest : {$max : "$depth"},
-                kills: {$sum : "kills"},
-            $sort: {score: -1}}
+                kills: {$sum : "kills"}}},  
+            {$sort: {score: -1}}
         ])
         .exec()
         .then(doc => {

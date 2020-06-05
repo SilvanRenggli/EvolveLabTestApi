@@ -19,7 +19,9 @@ const Creature = new mongoose.Schema({
 
 const Users = new mongoose.Schema({
     name: String,
-    score: Number
+    score: Number,
+    deepest: Number,
+    kills: Number
 }) 
 
 module.exports = mongoose.model("creatures", Creature);

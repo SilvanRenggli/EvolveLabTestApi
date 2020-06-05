@@ -31,13 +31,26 @@ app.post("/create_user", async (req, res) => {
     }
 });
 
+app.get("/calc_user_score", async (req, res) => {
+    try{
+        Creature.aggregate([{$group: {owner: "$owner", max_depth: {$max: "depth"}}}, {$sort: {total: -1}} ]).exec()
+        .then(doc => {
+            console.log(doc)
+            res.status(200).json(doc);
+        })
+    } catch(err){
+        res.send({message: err})
+        console.log(err)
+    }
+});
+
+
 app.post("/update_enemy", async (req, res) => {
     console.log("called_update_enemy")
     try{
         const id = req.body["id"];
         var winratio = req.body["winratio"];
         var depth = req.body["depth"]
-        const enemy = Creature.findById(id);
         if (req.body["won"]){
             await Creature.update({"_id" : id},{$inc: {"kills": 1}})
             winratio += 1

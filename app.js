@@ -36,9 +36,11 @@ app.get("/calc_user_score", async (req, res) => {
         Creature.aggregate([
             {$group: {
                 _id : "$owner",
-                score: {$sum : {$multiply :["$depth", {$add: ["$kills", {"$literal" : 1}]}]}},
+                score: {$sum : {$multiply :[
+                    {$multiply: ["$depth", {"$literal" : 2}]},
+                    {$add: ["$kills", {"$literal" : 1}]}]}},
                 deepest : {$max : "$depth"},
-                kills: {$sum : "kills"}}},  
+                kills: {$sum : "$kills"}}},  
             {$sort: {score: -1}}
         ])
         .exec()
@@ -69,7 +71,7 @@ app.post("/update_enemy", async (req, res) => {
             }else{
                 await Creature.update(
                     {"_id" : id}, 
-                    {$inc: {"winratio" : 1 }});
+                    {$set: {"winratio" : winratio }});
             }
         }else{
             winratio -= 1;
@@ -80,7 +82,7 @@ app.post("/update_enemy", async (req, res) => {
             }else{
                 await Creature.update(
                     {"_id" : id}, 
-                    {$inc: {"winratio" : -1 }});
+                    {$set: {"winratio" : winratio }});
             }
         }
         res.send("hello")

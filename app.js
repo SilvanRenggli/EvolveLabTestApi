@@ -59,39 +59,41 @@ app.get("/calc_user_score", async (req, res) => {
 
 app.post("/update_enemy", async (req, res) => {
     console.log("called_update_enemy")
-    try{
-        const id = req.body["id"];
-        var winratio = req.body["winratio"];
-        var depth = req.body["depth"]
-        if (req.body["won"]){
-            await Creature.update({"_id" : id},{$inc: {"kills": 1}})
-            winratio += 1
-            if(winratio > 2){
-                await Creature.update(
-                    {"_id" : id}, 
-                    {$set: {"depth" : depth + 1, "winratio" : -2}});
+    const id = req.body["id"];
+    var winratio = req.body["winratio"];
+    var depth = req.body["depth"]
+    Creature.find({depth: depth}).countDocuments().exec(function (err, count) {
+        try{
+            if (req.body["won"]){
+                await Creature.update({"_id" : id},{$inc: {"kills": 1}})
+                winratio += 1
+                if(winratio > 2 && count > 1){
+                    await Creature.update(
+                        {"_id" : id}, 
+                        {$set: {"depth" : depth + 1, "winratio" : -2}});
+                }else{
+                    await Creature.update(
+                        {"_id" : id}, 
+                        {$set: {"winratio" : winratio }});
+                }
             }else{
-                await Creature.update(
-                    {"_id" : id}, 
-                    {$set: {"winratio" : winratio }});
+                winratio -= 1;
+                if(winratio < -2 && depth > 1 && count > 1){
+                    await Creature.update(
+                        {"_id" : id}, 
+                        {$set: {"depth" : depth - 1, "winratio" : 2}});
+                }else{
+                    await Creature.update(
+                        {"_id" : id}, 
+                        {$set: {"winratio" : winratio }});
+                }
             }
-        }else{
-            winratio -= 1;
-            if(winratio < -2 && req.body["depth"] > 1){
-                await Creature.update(
-                    {"_id" : id}, 
-                    {$set: {"depth" : depth - 1, "winratio" : 2}});
-            }else{
-                await Creature.update(
-                    {"_id" : id}, 
-                    {$set: {"winratio" : winratio }});
-            }
+            res.send("hello")
+        } catch(err){
+            res.send({message: err})
+            console.log(err)
         }
-        res.send("hello")
-    } catch(err){
-        res.send({message: err})
-        console.log(err)
-    }
+    })
 });
 
 app.get("/load_creature", async (req, res) => {

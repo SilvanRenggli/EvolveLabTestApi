@@ -78,9 +78,13 @@ app.post("/update_enemy", async (req, res) => {
         }else{
             winratio -= 1;
             if(winratio < -2 && req.body["depth"] > 1){
-                await Creature.update(
-                    {"_id" : id}, 
-                    {$set: {"depth" : depth - 1, "winratio" : 2}});
+                Creature.find({depth: depth}).countDocuments().exec(function (err, count) {
+                    if (count > 1){
+                        await Creature.update(
+                            {"_id" : id}, 
+                            {$set: {"depth" : depth - 1, "winratio" : 2}});
+                     }
+                });
             }else{
                 await Creature.update(
                     {"_id" : id}, 

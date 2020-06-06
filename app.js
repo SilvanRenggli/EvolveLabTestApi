@@ -37,10 +37,12 @@ app.get("/calc_user_score", async (req, res) => {
             {$group: {
                 _id : "$owner",
                 score: {$sum : {$multiply :[
-                    {$multiply: ["$depth", {"$literal" : 2}]},
+                    {$multiply: ["$depth", "$depth"]},
                     {$add: ["$kills", {"$literal" : 1}]}]}},
                 deepest : {$max : "$depth"},
-                kills: {$sum : "$kills"}}},  
+                kills : {$sum : "$kills"},
+                creatures : {$sum: 1} 
+            }},  
             {$sort: {score: -1}}
         ])
         .exec()
@@ -75,7 +77,7 @@ app.post("/update_enemy", async (req, res) => {
             }
         }else{
             winratio -= 1;
-            if(winratio < -2 && req.body["depth"] != 0){
+            if(winratio < -2 && req.body["depth"] > 1){
                 await Creature.update(
                     {"_id" : id}, 
                     {$set: {"depth" : depth - 1, "winratio" : 2}});

@@ -62,27 +62,27 @@ app.post("/update_enemy", async (req, res) => {
     const id = req.body["id"];
     var winratio = req.body["winratio"];
     var depth = req.body["depth"]
-    Creature.find({depth: depth}).countDocuments().exec(function (err, count) {
+    Creature.find({depth: depth}).countDocuments().exec(async function (err, count) {
         if (req.body["won"]){
-            Creature.update({"_id" : id},{$inc: {"kills": 1}})
+            await Creature.update({"_id" : id},{$inc: {"kills": 1}})
             winratio += 1
             if(winratio > 2 && count > 1){
-                Creature.update(
+                await Creature.update(
                     {"_id" : id}, 
                     {$set: {"depth" : depth + 1, "winratio" : -2}});
             }else{
-                Creature.update(
+                await Creature.update(
                     {"_id" : id}, 
                     {$set: {"winratio" : winratio }});
             }
         }else{
             winratio -= 1;
             if(winratio < -2 && depth > 1 && count > 1){
-                Creature.update(
+                await Creature.update(
                     {"_id" : id}, 
                     {$set: {"depth" : depth - 1, "winratio" : 2}});
             }else{
-                Creature.update(
+                await Creature.update(
                     {"_id" : id}, 
                     {$set: {"winratio" : winratio }});
             }

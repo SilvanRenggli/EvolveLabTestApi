@@ -70,7 +70,9 @@ app.post("/update_enemy", async (req, res) => {
         Creature.findOne({"_id": id}).exec(async function (err, creature){
             badges = req.body["badges"]
             if (req.body["won"]){
-                creature.badges = creature.badges.concat(badges)
+                if (badges.length){
+                    creature.badges .push(badges.sort().pop())
+                } 
                 creature.kills += 1;
                 creature.crystall_countdown -= 1;
                 creature.winratio += 1;

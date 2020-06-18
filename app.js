@@ -68,7 +68,7 @@ app.post("/update_enemy", async (req, res) => {
     var player_badges = req.body["badges"]
     Creature.find({depth: depth}).countDocuments().exec(async function (err, count) {
         Creature.findOne({"_id": id}).exec(async function (err, creature){
-            badges = creature.badges
+            badges = req.body["badges"]
             if (req.body["won"]){
                 creature.badges = creature.badges.concat(badges)
                 creature.kills += 1;

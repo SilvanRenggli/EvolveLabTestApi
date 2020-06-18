@@ -128,7 +128,7 @@ app.get("/load_crystall_creature", async (req, res) => {
     // Get a random entry
     var random = Math.floor(Math.random() * count)
   
-    Creature.findOne({depth: depth}).skip(random)
+    Creature.findOne({depth: depth},{crystalls: { $gt: 0}}).skip(random)
     .exec()
     .then(doc => {
         console.log(doc)

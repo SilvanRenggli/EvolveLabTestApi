@@ -67,7 +67,6 @@ app.post("/update_enemy", async (req, res) => {
             if (req.body["won"]){
                 creature.kills += victories;
                 creature.crystall_countdown -= victories;
-                //await Creature.update({"_id" : id},{$inc: {"kills": 1, "crystall_countdown": -1}})
                 creature.winratio += victories;
                 if(creature.winratio > 2 && count > 1){
                     await Creature.update(
@@ -78,7 +77,7 @@ app.post("/update_enemy", async (req, res) => {
                         {"_id" : id}, 
                         {$set: {"winratio" : creature.winratio, "kills": creature.kills, "crystall_countdown": creature.crystall_countdown}});
                 }
-                if(creature.crystall_countdown <= 0){
+                if(creature.crystall_countdown < 1){
                     await Creature.update(
                         {"_id" : id},
                         {$set: {"crystalls" : creature.crystalls + 1, "crystall_countdown" : 5}});

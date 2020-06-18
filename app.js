@@ -123,12 +123,12 @@ app.get("/load_creature", async (req, res) => {
 app.get("/load_crystall_creature", async (req, res) => {
 
     var depth = req.body["depth"];
-    Creature.find({depth: depth},{crystalls: { $gt: 0}}).countDocuments().exec(function (err, count) {
+    Creature.find({depth: depth, crystalls: { $gt: 0}}).countDocuments().exec(function (err, count) {
 
     // Get a random entry
     var random = Math.floor(Math.random() * count)
   
-    Creature.findOne({depth: depth},{crystalls: { $gt: 0}}).skip(random)
+    Creature.findOne({depth: depth, crystalls: { $gt: 0}}).skip(random)
     .exec()
     .then(doc => {
         console.log(doc)

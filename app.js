@@ -13,7 +13,7 @@ app.post("/create_creature", async (req, res) => {
     try{
         const creature = new Creature(req.body);
         creature["crystalls"] = 0;
-        creature["crystall_countdown"] = 0;
+        creature["crystall_countdown"] = 5;
         creature["badges"] = []
         creature["dna"] = {}
         await creature.save();

@@ -65,20 +65,23 @@ app.post("/update_enemy", async (req, res) => {
     console.log("called_update_enemy")
     const id = req.body["id"];
     var depth = req.body["depth"]
+    var player_badges = req.body["badges"]
     Creature.find({depth: depth}).countDocuments().exec(async function (err, count) {
         Creature.findOne({"_id": id}).exec(async function (err, creature){
+            badges = creature.badges
             if (req.body["won"]){
+                creature.badges = creature.badges.concat(badges)
                 creature.kills += 1;
                 creature.crystall_countdown -= 1;
                 creature.winratio += 1;
                 if(creature.winratio > 2 && count > 1){
                     await Creature.update(
                         {"_id" : id}, 
-                        {$set: {"depth" : depth + 1, "winratio" : -2, "kills": creature.kills, "crystall_countdown": creature.crystall_countdown}});
+                        {$set: {"depth" : depth + 1, "winratio" : -2, "kills": creature.kills, "crystall_countdown": creature.crystall_countdown, "badges" : creature.badges}});
                 }else{
                     await Creature.update(
                         {"_id" : id}, 
-                        {$set: {"winratio" : creature.winratio, "kills": creature.kills, "crystall_countdown": creature.crystall_countdown}});
+                        {$set: {"winratio" : creature.winratio, "kills": creature.kills, "crystall_countdown": creature.crystall_countdown, "badges" : creature.badges}});
                 }
                 if(creature.crystall_countdown < 1){
                     await Creature.update(
@@ -86,15 +89,18 @@ app.post("/update_enemy", async (req, res) => {
                         {$set: {"crystalls" : creature.crystalls + 1, "crystall_countdown" : 5}});
                 }
             }else{
+                creature.badges.sort()
+                creature.badges.pop()
                 creature.winratio -= 1
+                creature.crystalls = max(0, creature.crystalls - 1)
                 if(creature.winratio < -2 && depth > 1 && count > 1){
                     await Creature.update(
                         {"_id" : id}, 
-                        {$set: {"depth" : depth - 1, "winratio" : 2}});
+                        {$set: {"depth" : depth - 1, "winratio" : 2, "crystalls": creature.crystalls, "badges" : creature.badges}});
                 }else{
                     await Creature.update(
                         {"_id" : id}, 
-                        {$set: {"winratio" : creature.winratio }});
+                        {$set: {"winratio" : creature.winratio, "crystalls": creature.crystalls, "badges" : creature.badges }});
                 }
             }
             res.send(creature)

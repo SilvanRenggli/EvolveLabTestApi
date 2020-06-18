@@ -92,7 +92,7 @@ app.post("/update_enemy", async (req, res) => {
                 creature.badges.sort()
                 creature.badges.pop()
                 creature.winratio -= 1
-                creature.crystalls = max(0, creature.crystalls - 1)
+                creature.crystalls = Math.max(0, creature.crystalls - 1)
                 if(creature.winratio < -2 && depth > 1 && count > 1){
                     await Creature.update(
                         {"_id" : id}, 

@@ -14,7 +14,6 @@ app.post("/create_creature", async (req, res) => {
         const creature = new Creature(req.body);
         creature["crystalls"] = 0;
         creature["crystall_countdown"] = 5;
-        creature["badges"] = []
         creature["dna"] = {}
         await creature.save();
         res.send(creature)
@@ -71,7 +70,7 @@ app.post("/update_enemy", async (req, res) => {
             badges = req.body["badges"]
             if (req.body["won"]){
                 if (badges.length){
-                    creature.badges .push(badges.sort().pop())
+                    creature.badges.push(badges.sort().pop())
                 } 
                 creature.kills += 1;
                 creature.crystall_countdown -= 1;

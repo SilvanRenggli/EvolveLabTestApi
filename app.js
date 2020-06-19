@@ -127,6 +127,15 @@ app.get("/load_creature", async (req, res) => {
   })
 })
 
+app.get("/check_end", async (req, res) => {
+
+    var depth = req.body["depth"];
+    Creature.find({depth: depth}).countDocuments().exec(function (err, count) {
+        console.log(count)
+        res.send(count);
+  }).catch(err)
+})
+
 app.get("/load_crystall_creature", async (req, res) => {
 
     var depth = req.body["depth"];

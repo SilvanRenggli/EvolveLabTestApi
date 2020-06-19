@@ -130,9 +130,9 @@ app.get("/load_creature", async (req, res) => {
 app.get("/check_end", async (req, res) => {
 
     var depth = req.body["depth"];
-    Creature.find({depth: depth}).countDocuments().exec(function (err, count) {
-        console.log(count)
-        res.send(count);
+    Creature.findOne({depth: depth}).exec(function (err, doc) {
+        console.log(doc)
+        res.send(doc);
   }).catch(err)
 })
 

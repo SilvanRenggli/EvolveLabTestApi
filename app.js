@@ -13,7 +13,7 @@ app.post("/create_creature", async (req, res) => {
     try{
         const creature = new Creature(req.body);
         creature["crystalls"] = 0;
-        creature["crystall_countdown"] = 5;
+        creature["crystall_countdown"] = 3;
         creature["dna"] = {}
         await creature.save();
         res.send(creature)
@@ -87,13 +87,13 @@ app.post("/update_enemy", async (req, res) => {
                 if(creature.crystall_countdown < 1){
                     await Creature.update(
                         {"_id" : id},
-                        {$set: {"crystalls" : creature.crystalls + 1, "crystall_countdown" : 5}});
+                        {$set: {"crystalls" : creature.crystalls + 1, "crystall_countdown" : 3}});
                 }
             }else{
                 creature.badges.sort()
                 creature.badges.pop()
                 creature.winratio -= 1
-                creature.crystalls = Math.max(0, creature.crystalls - 1)
+                creature.crystalls = 0
                 if(creature.winratio < -2 && depth > 1 && count > 1){
                     await Creature.update(
                         {"_id" : id}, 

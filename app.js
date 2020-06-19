@@ -132,10 +132,11 @@ app.get("/check_end", async (req, res) => {
     var depth = req.body["depth"];
     Creature.findOne({depth: depth}).exec(function (err, doc) {
         if(doc != null){
-        console.log(doc)
-        res.send(true);
+            console.log("end not reached");
+            res.send("false");
         }else{
-            res.send(false);
+            console.log("end reached")
+            res.send("true");
         }
   }).catch(err)
 })

@@ -63,6 +63,7 @@ app.get("/get_strongest", async (req, res) => {
     var depth = req.body["depth"]
     try{
         Creature.find({depth: depth})
+        .project({_id: 1, winratio: 1})
         .sort({winratio: -1})
         .limit(3)
         .exec()

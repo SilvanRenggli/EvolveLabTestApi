@@ -11,8 +11,20 @@ var PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 
-app.get('/login', (req, res) => {
-    //Authenticate User
+app.get('/login', async (req, res) => {
+    const user = await User.findOne({name: req.body.name})
+    if(user == null){
+        return res.status(400).send("cannot find user")
+    }
+    try{
+        if (await bcrypt.compare(user.password, req.body.password)){
+            res.send('Success')
+        } else {
+            res.send('Not Allowed')
+        }
+    }catch{
+        res.status(500).send()
+    }
 })
 
 

@@ -9,6 +9,7 @@ const app = express()
 
 const Creature = require('./model/creatures')
 const User = require('./model/user')
+const Token = require('./model/tokens')
 
 const PORT = process.env.PORT || 5000;
 
@@ -23,8 +24,11 @@ app.post('/login', async (req, res) => {
     try{
         if (await bcrypt.compare(req.body.password, user.password)){
             
-            const accessToken = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET)
-            res.json({accessToken: accessToken})
+            const accessToken = generateAccessToken(user.toJSON())
+            const refreshToken = jwt.sign(user.toJSON(), process.env.REFRESH_TOKEN_SECRET)
+            res.json({accessToken: accessToken,refreshToken: refreshToken})
+            const token = new Token({token: refreshToken})
+            await token.save()
 
         } else {
             res.send('Not Allowed')
@@ -34,6 +38,21 @@ app.post('/login', async (req, res) => {
     }
 })
 
+app.post('/token', async (req,res) => {
+    const refreshToken = req.body.token
+    if (refreshToken == null) return res.sendStatus(401)
+    if (!(await User.findOne({token: refreshToken}))) return res.sendStatus(403)
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) =>{
+        if (err) return res.sendStatus(403)
+        const accessToken = generateAccessToken({ name: user.name})
+        res.json({accessToken: accessToken})
+    })
+})
+
+app.delete('/logout', async (req, res) => {
+    await Token.findOneAndDelete({token: req.body.token})
+    res.send(204)
+})
 
 app.post("/store_creature", authenticateToken, async (req, res) => {
     //stores a new creature
@@ -88,6 +107,10 @@ function authenticateToken(req, res, next) {
         req.user = user
         next()
     })
+}
+
+function generateAccessToken(user) {
+    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30m' })
 }
 
 mongoose.connect(process.env.DB_CONNECTION_STRING,

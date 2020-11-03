@@ -6,7 +6,7 @@ const UserData = new mongoose.Schema({
     inFight: Boolean,
     alive: Array,
     money: Array,
-    crystalls: Number,
+    crystals: Number,
     creatures: Array
 })
 

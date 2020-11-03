@@ -10,6 +10,7 @@ const app = express()
 const Creature = require('./model/creatures')
 const User = require('./model/user')
 const Token = require('./model/tokens')
+const UserData = require('./model/userData')
 
 const PORT = process.env.PORT || 5000;
 
@@ -24,8 +25,9 @@ app.post('/login', async (req, res) => {
     try{
         if (await bcrypt.compare(req.body.password, user.password)){
             
-            const accessToken = generateAccessToken(user.toJSON())
-            const refreshToken = jwt.sign(user.toJSON(), process.env.REFRESH_TOKEN_SECRET)
+            const username = {username = user.name}
+            const accessToken = generateAccessToken()
+            const refreshToken = jwt.sign(username, process.env.REFRESH_TOKEN_SECRET)
             res.json({accessToken: accessToken,refreshToken: refreshToken})
             const token = new Token({token: refreshToken})
             await token.save()
@@ -43,9 +45,9 @@ app.post('/token', async (req,res) => {
     if (refreshToken == null) return res.sendStatus(401)
     const token = await Token.findOne({token: refreshToken})
     if (token == null) return res.sendStatus(403)
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) =>{
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, username) =>{
         if (err) return res.sendStatus(403)
-        const accessToken = generateAccessToken({ name: user.name})
+        const accessToken = generateAccessToken({ username: username.name})
         res.json({accessToken: accessToken})
     })
 })
@@ -57,7 +59,7 @@ app.delete('/logout', async (req, res) => {
 
 app.post("/store_creature", authenticateToken, async (req, res) => {
     //stores a new creature
-    res.json(req.user)
+    res.json(req.username)
 });
 
 app.post("/create_user", async (req, res) => {
@@ -72,30 +74,29 @@ app.post("/create_user", async (req, res) => {
     }
 });
 
-app.get("/calc_user_score", async (req, res) => {
+app.post("save_user_data", authenticateToken, async(req, res) => {
+    //Saves all the user data to the server
+}) 
+
+app.get("load_user_data", authenticateToken, async(req, res) => {
+    //loads all the user data from the server
+})
+
+app.get("/get_score", async (req, res) => {
     //calculates user scores
 });
 
-app.get("/get_strongest", async (req, res) => {
-    //returns the three strongest creatures
+app.get("/get_depth_info", authenticateToken, async (req, res) => {
+    //check whether end was reached
+    //add a random creature with a crystal to the body if one exists at depth
+    //add the top three creatures to the body
+    //add a random creature to the body
 });
 
 
-app.post("/update_enemy", async (req, res) => {
+app.post("/update_enemy", authenticateToken, async (req, res) => {
     //updates an enemy
 });
-
-app.get("/load_creature", async (req, res) => {
-    //returns a creature
-})
-
-app.get("/check_end", async (req, res) => {
-    //returns whether the end was reached TODO: maybe this can be implemented in a general get? that loads all data. 
-})
-
-app.get("/load_crystall_creature", async (req, res) => {
-    //loads the creature holding a crystall. TODO: One load functiun that returns everything.
-})
 
 //Middleware
 function authenticateToken(req, res, next) {
@@ -103,15 +104,15 @@ function authenticateToken(req, res, next) {
     const token = authHeader && authHeader.split(' ')[1] //only get the token from the header
     if (token == null) return res.sendStatus(401)
     
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, username) => {
         if (err) return res.send.status(403)
-        req.user = user
+        req.username = username
         next()
     })
 }
 
-function generateAccessToken(user) {
-    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30m' })
+function generateAccessToken(username) {
+    return jwt.sign(username, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30m' })
 }
 
 mongoose.connect(process.env.DB_CONNECTION_STRING,

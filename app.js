@@ -23,7 +23,7 @@ app.post('/login', async (req, res) => {
     try{
         if (await bcrypt.compare(req.body.password, user.password)){
             
-            const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
+            const accessToken = jwt.sign(user.toJSON(), process.env.ACCESS_TOKEN_SECRET)
             res.json({accessToken: accessToken})
 
         } else {

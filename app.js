@@ -35,8 +35,9 @@ app.post('/login', async (req, res) => {
 })
 
 
-app.post("/store_creature", async (req, res) => {
+app.post("/store_creature", authenticateToken, async (req, res) => {
     //stores a new creature
+    res.json(req.user)
 });
 
 app.post("/create_user", async (req, res) => {
@@ -75,6 +76,19 @@ app.get("/check_end", async (req, res) => {
 app.get("/load_crystall_creature", async (req, res) => {
     //loads the creature holding a crystall. TODO: One load functiun that returns everything.
 })
+
+//Middleware
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1] //only get the token from the header
+    if (token == null) return res.sendStatus(401)
+    
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+        if (err) return res.send.status(403)
+        req.user = user
+        next()
+    })
+}
 
 mongoose.connect(process.env.DB_CONNECTION_STRING,
                 { useNewUrlParser: true, useUnifiedTopology: true },(req, res) =>{

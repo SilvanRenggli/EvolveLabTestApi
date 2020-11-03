@@ -26,7 +26,7 @@ app.post("/create_user", async (req, res) => {
     try {
         user.password = await bcrypt.hash(user.password, 10)
         await user.save
-        res.status(201).send()
+        res.status(201).send(user)
     }catch{
         res.status(500).send()
     }

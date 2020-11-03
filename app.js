@@ -80,7 +80,7 @@ app.post("/save_user_data", authenticateToken, async(req, res) => {
     const filter = { name: req.username.username }
     const newUserData = req.body
     newUserData.name = req.username.username
-    const result = await User.replaceOne(filter, newUserData, {upsert: true} )
+    const result = await UserData.replaceOne(filter, newUserData, {upsert: true} )
     res.status(201).send()
     }catch{
         res.status(500).send()

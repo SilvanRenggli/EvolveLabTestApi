@@ -1,24 +1,31 @@
-const express = require("express")
-const mongoose = require("mongoose")
-const bcrypt = require("bcryptjs")
+const express = require('express')
+const mongoose = require('mongoose')
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
-require("dotenv/config")
+require('dotenv/config')
 
 const app = express()
-const Creature = require("./model/creatures")
-const User = require("./model/user")
-var PORT = process.env.PORT || 5000;
+
+const Creature = require('./model/creatures')
+const User = require('./model/user')
+
+const PORT = process.env.PORT || 5000;
+
 
 app.use(express.json());
 
-app.get('/login', async (req, res) => {
+app.post('/login', async (req, res) => {
     const user = await User.findOne({name: req.body.name})
     if(user == null){
-        return res.status(400).send("cannot find user")
+        return res.status(400).send('cannot find user')
     }
     try{
         if (await bcrypt.compare(req.body.password, user.password)){
-            res.send('Success')
+            
+            const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
+            res.json({accessToken: accessToken})
+
         } else {
             res.send('Not Allowed')
         }

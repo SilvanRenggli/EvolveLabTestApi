@@ -25,8 +25,8 @@ app.post('/login', async (req, res) => {
     try{
         if (await bcrypt.compare(req.body.password, user.password)){
             
-            const username = {username = user.name}
-            const accessToken = generateAccessToken()
+            const username = {username: user.name}
+            const accessToken = generateAccessToken(username)
             const refreshToken = jwt.sign(username, process.env.REFRESH_TOKEN_SECRET)
             res.json({accessToken: accessToken,refreshToken: refreshToken})
             const token = new Token({token: refreshToken})

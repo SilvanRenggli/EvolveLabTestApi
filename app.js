@@ -75,7 +75,16 @@ app.post("/create_user", async (req, res) => {
 });
 
 app.post("save_user_data", authenticateToken, async(req, res) => {
-    //Saves all the user data to the server
+    //replaces the userdata in the DB with the one from the body
+    try{
+    const filter = { username: req.username.username }
+    const newUserData = req.body
+    const result = await User.replaceOne(filter, newUserData, {upsert: true} )
+    res.status(201).send()
+    }catch{
+        res.status(500).send()
+    }
+
 }) 
 
 app.get("load_user_data", authenticateToken, async(req, res) => {

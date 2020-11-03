@@ -41,7 +41,8 @@ app.post('/login', async (req, res) => {
 app.post('/token', async (req,res) => {
     const refreshToken = req.body.token
     if (refreshToken == null) return res.sendStatus(401)
-    if (!(await User.findOne({token: refreshToken}))) return res.sendStatus(403)
+    const token = await User.findOne({token: refreshToken})
+    if (token == null) return res.sendStatus(403)
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) =>{
         if (err) return res.sendStatus(403)
         const accessToken = generateAccessToken({ name: user.name})

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const User = new mongoose.Schema({
+const Token = new mongoose.Schema({
     token: String
 })
 

@@ -17,10 +17,10 @@ app.get('/login', async (req, res) => {
         return res.status(400).send("cannot find user")
     }
     try{
-        if (await bcrypt.compare(user.password, req.body.password)){
-            res.send('Success')
+        if (await bcrypt.compare(req.body.password, user.password)){
+            res.send('Success', user)
         } else {
-            res.send('Not Allowed')
+            res.send('Not Allowed', user)
         }
     }catch{
         res.status(500).send()

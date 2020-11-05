@@ -64,11 +64,9 @@ app.post("/store_creature", authenticateToken, async (req, res) => {
 
 app.post("/create_user", async (req, res) => {
     //registers a new user
-    const user = new User()
+    const user = new User(req.body)
     try {
         user.password = await bcrypt.hash(req.body.password, 10)
-        user.name = rec.body.name
-        user.email = rec.body.email
         await user.save()
         res.status(201).send(user)
     }catch{

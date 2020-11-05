@@ -4,21 +4,21 @@ const User = new mongoose.Schema({
     name: {
         type: String,
         unique: true,
-        //required: true,
+        required: true,
         maxlength: 30,
-        //minlength: 1
+        minlength: 1
     },
     email: {
         type: String,
-        //required: true,
-        // maxlength: 320,
-        // minlength: 3
+        required: true,
+        maxlength: 320,
+        minlength: 3
     },
     password: {
         type: String,
-        //required: true,
-        // maxlength: 30,
-        // minlength: 6
+        required: true,
+        maxlength: 30,
+        minlength: 6
     }
 })
 

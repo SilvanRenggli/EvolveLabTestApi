@@ -90,6 +90,13 @@ app.post("/save_user_data", authenticateToken, async(req, res) => {
 
 app.get("load_user_data", authenticateToken, async(req, res) => {
     //loads all the user data from the server
+    try{
+        const filter = { name: req.username.username }
+        const data = await UserData.findOne(filter)
+        res.status.send(data)
+    }catch{
+        res.status(500).send()
+    }
 })
 
 app.get("/get_score", async (req, res) => {

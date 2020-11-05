@@ -96,7 +96,8 @@ app.get("/load_user_data", authenticateToken, async(req, res) => {
         const filter = { name: req.username.username }
         const data = await UserData.findOne(filter)
         res.status.send(data)
-    }catch{
+    }catch(e){
+        console.log(e)
         res.status(500).send()
     }
 })

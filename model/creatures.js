@@ -59,16 +59,16 @@ const Creature = new mongoose.Schema({
         required: [true],
         min: 0
     },
-    winratio: {
+    battlePoints: {
         type: Number,
         required: [true]
     },
-    crystalls: {
+    crystals: {
         type: Number,
         required: [true],
         min: 0
     },
-    crystall_countdown: {
+    crystal_countdown: {
         type: Number,
         required: [true],
     },

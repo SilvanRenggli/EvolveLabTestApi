@@ -7,10 +7,11 @@ require('dotenv/config')
 
 const app = express()
 
-const Creature = require('./model/creatures')
+const Creatures = require('./model/creatures')
 const User = require('./model/user')
 const Token = require('./model/tokens')
 const UserData = require('./model/userData')
+
 
 const PORT = process.env.PORT || 5000;
 
@@ -107,10 +108,39 @@ app.get("/get_score", async (req, res) => {
 });
 
 app.get("/get_depth_info", authenticateToken, async (req, res) => {
-    //check whether end was reached
-    //add a random creature with a crystal to the body if one exists at depth
-    //add the top three creatures to the body
-    //add a random creature to the body
+
+    const depth = req.body.depth
+    var depthInfo = {
+        endReached: false,
+        randomEnemy: null,
+        crystalEnemy: null,
+        topCreatures: []
+    }
+    try{
+        //add a random creature to the body
+        depthInfo.randomEnemy = await Creatures.aggregate([
+            { $match: { depth: depth } },
+            { $sample: { size: 1 } }
+        ])
+
+        //check whether end was reached
+        depthInfo.endReached = depthInfo.randomEnemy == null
+
+        //add a random creature with a crystal to the body if one exists at depth
+        depthInfo.crystalEnemy = await Creatures.aggregate([
+            { $match: { depth: depth, crystals: { $gte: 1} } },
+            { $sample: {size: 1} }
+        ])
+
+        //add the top three creatures to the body
+        depthInfo.topCreatures = await Creatures.find({battlePoints: { $gte: 5 } }).sort({ battlePoints: -1 }).limit(3)
+
+        res.status(200).send(depthInfo)
+    }catch(e){
+        console.log(e)
+        res.sendStatus(500)
+    }
+    
 });
 
 

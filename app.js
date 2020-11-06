@@ -61,7 +61,7 @@ app.delete('/logout', async (req, res) => {
 app.post("/store_creature", authenticateToken, async (req, res) => {
     //stores a new creature
     const creature = new Creature(req.body)
-    if (creature.name !== req.username.username) { return res.sendStatus(403) }
+    if (creature.owner !== req.username.username) { return res.sendStatus(403) }
     try{
         await creature.save()
         res.sendStatus(200)
@@ -132,7 +132,7 @@ app.get("/get_depth_info", authenticateToken, async (req, res) => {
         ])
 
         //check whether end was reached
-        depthInfo.endReached = depthInfo.randomEnemy == null
+        depthInfo.endReached = ( depthInfo.randomEnemy.size() == 0 )
 
         //add a random creature with a crystal to the body if one exists at depth
         depthInfo.crystalEnemy = await Creature.aggregate([

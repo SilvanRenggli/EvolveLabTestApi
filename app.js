@@ -143,7 +143,7 @@ app.get("/get_depth_info", authenticateToken, async (req, res) => {
         //add the top three creatures to the body
         depthInfo.topCreatures = await Creature.find({battlePoints: { $gte: 5 } }).sort({ battlePoints: -1 }).limit(3)
 
-        res.status(200).send(depthInfo)
+        res.send(depthInfo).status(200)
     }catch(e){
         console.log(e)
         res.sendStatus(500)

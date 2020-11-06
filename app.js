@@ -120,8 +120,8 @@ app.get("/get_depth_info", authenticateToken, async (req, res) => {
     const depth = req.body.depth
     var depthInfo = {
         endReached: false,
-        randomEnemy: null,
-        crystalEnemy: null,
+        randomEnemy: [],
+        crystalEnemy: [],
         topCreatures: []
     }
     try{
@@ -132,7 +132,7 @@ app.get("/get_depth_info", authenticateToken, async (req, res) => {
         ])
 
         //check whether end was reached
-        depthInfo.endReached = ( depthInfo.randomEnemy.size() == 0 )
+        depthInfo.endReached = ( depthInfo.randomEnemy.length == 0 )
 
         //add a random creature with a crystal to the body if one exists at depth
         depthInfo.crystalEnemy = await Creature.aggregate([
